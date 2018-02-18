@@ -55,8 +55,13 @@ def count_tf(docs,v):
 	temp_arr=[]
 	for doc in docs:
 		tf_arr={}
+
+		total=0;
 		for w in v:
-			tf_arr[w]=doc.count(w)
+			total+=doc.count(w)
+
+		for wt in v:
+			tf_arr[wt] = round(doc.count(wt)/ float(total),6)
 		temp_arr.append(tf_arr)
 	return temp_arr
 
@@ -93,7 +98,7 @@ def main():
 		words.append(word)
 	v = create_vocabulary(words)
 
-	out_idf(count_idf(words, v))
+	out_tf(count_tf(words, v))
 	# print(count_tf(words,v))
 	# print("=========================\n")
 	# print(count_idf(words,v))
