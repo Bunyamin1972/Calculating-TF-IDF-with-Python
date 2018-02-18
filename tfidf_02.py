@@ -4,7 +4,8 @@ from nltk.corpus import stopwords
 from nltk.stem import LancasterStemmer
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import RegexpTokenizer
-import html.parser
+# import html.parser
+import pandas as pd
 
 def read_file():
 	text = []
@@ -14,7 +15,7 @@ def read_file():
 	return(text)
 
 def lower_casing(text):
-	text = html.parser.HTMLParser().unescape(text)
+	# text = html.parser.HTMLParser().unescape(text)
 	tokenizer = RegexpTokenizer(r'\w+')
 	return tokenizer.tokenize(text.lower())
 
@@ -70,6 +71,18 @@ def count_idf(docs,v):
 
 	return idf_arr
 
+def out_tf(tf_result):
+	df = pd.DataFrame(tf_result)
+	df.to_csv(sys.stdout)
+
+def out_idf(idf_result):
+	df = pd.DataFrame(idf_result)
+	df.to_csv(sys.stdout)
+
+
+
+
+
 def main():
 	texts = read_file() 
 	words = []
@@ -79,11 +92,11 @@ def main():
 		word = stemming_words(word)
 		words.append(word)
 	v = create_vocabulary(words)
-	
-	
-	print(count_tf(words,v))
-	print("=========================\n")
-	print(count_idf(words,v))
+
+	out_idf(count_idf(words, v))
+	# print(count_tf(words,v))
+	# print("=========================\n")
+	# print(count_idf(words,v))
 
 	# print(temp_arr[4])
 
