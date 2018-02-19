@@ -7,6 +7,7 @@ from nltk.tokenize import RegexpTokenizer
 import html.parser
 import pandas as pd
 import re
+import math
 
 def read_file():
 	text = []
@@ -74,7 +75,7 @@ def count_idf(docs,v):
 		for doc in docs:
 			if w in doc :
 				count += 1
-		idf_arr[w] = count/len(docs)
+		idf_arr[w] = math.log10(len(docs)/count)
 
 	return idf_arr
 
