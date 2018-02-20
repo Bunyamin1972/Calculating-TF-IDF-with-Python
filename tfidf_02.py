@@ -1,4 +1,5 @@
 import sys
+import nltk
 from nltk.tokenize import word_tokenize 
 from nltk.corpus import stopwords
 from nltk.stem import LancasterStemmer
@@ -9,7 +10,7 @@ import pandas as pd
 from pandas import DataFrame
 import re
 import math
-import csv
+#import csv
 
 def read_file():
 	text = []
@@ -58,6 +59,13 @@ def create_vocabulary(word):
 		vocabulary += set(i)
 	return vocabulary
 
+def cleaning(vb):
+	vb1 = vb 
+	for i in vb:
+		if i == '':
+			vb1.remove(i)
+	return vb1
+
 def count_tf(docs, v):
 	temp_arr = []
 	for doc in docs:
@@ -82,12 +90,10 @@ def count_idf(docs, v):
 
 def out_tf(tf_result):
 	df = pd.DataFrame(tf_result)
-	#df.to_csv(sys.stdout)
 	df.to_excel("tf.xlsx", sheet_name='tf', index = True)
 
 def out_idf(idf_result):
 	df = pd.DataFrame(idf_result, index = [0])
-	#df.to_csv(sys.stdout)
 	df.to_excel("idf.xlsx", sheet_name='idf', index = False)
 
 def main():
@@ -98,7 +104,7 @@ def main():
 		word = filter_stopword(word)
 		word = stemming_words(word)
 		words.append(word)
-	vb = create_vocabulary(words)
+	vb = cleaning(create_vocabulary(words))
 	out_tf(count_tf(words, vb))
 	out_idf(count_idf(words, vb))
 
