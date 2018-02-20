@@ -6,8 +6,10 @@ from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import RegexpTokenizer
 import html.parser
 import pandas as pd
+from pandas import DataFrame
 import re
 import math
+import csv
 
 def read_file():
 	text = []
@@ -56,7 +58,7 @@ def create_vocabulary(word):
 		vocabulary += set(i)
 	return vocabulary
 
-def count_tf(docs,v):
+def count_tf(docs, v):
 	temp_arr = []
 	for doc in docs:
 		tf_arr = {}
@@ -68,7 +70,7 @@ def count_tf(docs,v):
 		temp_arr.append(tf_arr)
 	return temp_arr
 
-def count_idf(docs,v):
+def count_idf(docs, v):
 	idf_arr = {}
 	for w in v:
 		count = 0
@@ -76,28 +78,29 @@ def count_idf(docs,v):
 			if w in doc :
 				count += 1
 		idf_arr[w] = math.log10(len(docs)/count)
-
 	return idf_arr
 
 def out_tf(tf_result):
 	df = pd.DataFrame(tf_result)
-	df.to_csv(sys.stdout)
+	#df.to_csv(sys.stdout)
+	df.to_excel("tf.xlsx", sheet_name='tf', index = True)
 
 def out_idf(idf_result):
-	df = pd.DataFrame(idf_result)
-	df.to_csv(sys.stdout)
+	df = pd.DataFrame(idf_result, index = [0])
+	#df.to_csv(sys.stdout)
+	df.to_excel("idf.xlsx", sheet_name='idf', index = False)
 
 def main():
 	texts = read_file() 
 	words = []
-	for i in texts:
-		word = lower_casing(i)
+	for text in texts:
+		word = lower_casing(text)
 		word = filter_stopword(word)
 		word = stemming_words(word)
 		words.append(word)
-	v = create_vocabulary(words)
-
-	out_tf(count_tf(words, v))
+	vb = create_vocabulary(words)
+	out_tf(count_tf(words, vb))
+	out_idf(count_idf(words, vb))
 
 if __name__ == '__main__':
 	main()
