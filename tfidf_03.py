@@ -3,14 +3,12 @@ import nltk
 from nltk.tokenize import word_tokenize 
 from nltk.corpus import stopwords
 from nltk.stem import LancasterStemmer
-from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import RegexpTokenizer
 import html.parser
 import pandas as pd
 from pandas import DataFrame
 import re
 import math
-#import csv
 
 def read_file():
 	text = []
@@ -46,13 +44,6 @@ def stemming_words(word):
 		word_stem.append(stemmer.stem(w))
 	return word_stem
 
-def lemmatization_words(word):
-	lemmatizer = WordNetLemmatizer()
-	word_lemma = []
-	for w in word:
-		word_lemma.append(lemmatizer.lemmatize(w))
-	return word_lemma
-
 def create_vocabulary(word):
 	vocabulary = []
 	for i in word:
@@ -85,7 +76,7 @@ def count_idf(docs, v):
 		for doc in docs:
 			if w in doc :
 				count += 1
-		idf_arr[w] = math.log10(len(docs) /count)
+		idf_arr[w] = math.log10(len(docs) + 1/count)
 	return idf_arr
 
 def out_tf(tf_result):
